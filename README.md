@@ -47,11 +47,17 @@ curl -X POST http://127.0.0.1:5000/train
 ### 3. Predict Endpoint
 **URL:** `POST /predict`
 
-Make predictions based on input JSON data. Example input: `{"Temperature": 80, "Run_Time": 120}`.
+Make predictions based on input JSON data.
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"Temperature": 80, "Run_Time": 120}' http://127.0.0.1:5000/predict
+curl -X POST -H "Content-Type: application/json" -d '{"Air temperature [K]": 297.3 , "Process temperature [K]": 308.3, "Rotational speed [rpm]": 1517, "Torque [Nm]": 50.7, "Tool wear [min]": 56.2}' http://127.0.0.1:5000/predict
 ```
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"Air temperature [K]": 297.4 , "Process temperature [K]": 305.2, "Rotational speed [rpm]": 1280, "Torque [Nm]": 60.4, "Tool wear [min]": 216}' http://127.0.0.1:5000/predict
+```
+
+				
 
 ---
 
