@@ -1,9 +1,7 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import pickle
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, f1_score
+import models
 
 app = Flask(__name__)
 
@@ -34,23 +32,11 @@ def train():
         return jsonify({'error': 'No dataset uploaded'}), 400
 
     try:
-        drop_columns = ['UDI', 'Product ID', 'Type', 'Machine failure', 'TWF', 'HDF', 'PWF', 'OSF', 'RNF']
-        X = data.drop(columns=drop_columns)
-        y = data['Machine failure']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=14)
-
-        #train
-        model = RandomForestClassifier(random_state=1)
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-
-        accuracy = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred, pos_label=1)
-
+        metrics = models.random_forest(data)
         with open('model.pkl', 'wb') as f:
             pickle.dump(model, f)
 
-        return jsonify({'message': 'Model trained successfully', 'accuracy': accuracy, 'f1_score': f1})
+        return jsonify({'message': 'Model trained successfully', 'accuracy': metrics.get('accuracy'), 'f1_score': metrics.get('f1')})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
