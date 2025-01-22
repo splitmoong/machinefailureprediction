@@ -29,14 +29,15 @@ def train():
     global model, data
 
     if data is None:
-        return jsonify({'error': 'No dataset uploaded'}), 400
+        return jsonify({'error': 'No Dataset uploaded'}), 400
 
     try:
-        metrics = models.random_forest(data)
+        model, metrics = models.random_forest(data)
         with open('model.pkl', 'wb') as f:
             pickle.dump(model, f)
 
-        return jsonify({'message': 'Model trained successfully', 'accuracy': metrics.get('accuracy'), 'f1_score': metrics.get('f1')})
+        return jsonify({'message': 'Model trained successfully', 'accuracy': metrics.get('accuracy'),
+                        'f1_score': metrics.get('f1')})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -45,13 +46,21 @@ def train():
 def predict():
     global model
 
+    # Load the model if not already loaded
     if model is None:
-        return jsonify({'error': 'Model not trained'}), 400
+        try:
+            with open('model.pkl', 'rb') as f:
+                model = pickle.load(f)
+        except FileNotFoundError:
+            return jsonify({'error': 'Model not trained or file not found'}), 400
 
     try:
         input_data = request.json
         input_df = pd.DataFrame([input_data])
+
+        # Make a prediction
         prediction = model.predict(input_df)[0]
+        prediction = int(prediction)
 
         return jsonify({'prediction': prediction})
     except Exception as e:

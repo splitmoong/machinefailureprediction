@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 import pandas as pd
 
 
-def random_forest(dataset: pd.DataFrame) -> dict:
+def random_forest(dataset: pd.DataFrame):
     X = dataset.drop(columns=['UDI', 'Product ID', 'Type', 'Machine failure', 'TWF', 'HDF', 'PWF', 'OSF', 'RNF'])
     y = dataset['Machine failure']
 
@@ -25,4 +25,4 @@ def random_forest(dataset: pd.DataFrame) -> dict:
     recall = recall_score(y_test, y_pred)
 
     metrics = {'accuracy': accuracy, 'f1': f1, 'precision': precision, 'recall': recall}
-    return  metrics
+    return  rf_clf, metrics
