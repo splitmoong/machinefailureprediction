@@ -46,7 +46,6 @@ def train():
 def predict():
     global model
 
-    # Load the model if not already loaded
     if model is None:
         try:
             with open('model.pkl', 'rb') as f:
@@ -57,8 +56,6 @@ def predict():
     try:
         input_data = request.json
         input_df = pd.DataFrame([input_data])
-
-        # Make a prediction
         prediction = model.predict(input_df)[0]
         prediction = int(prediction)
 

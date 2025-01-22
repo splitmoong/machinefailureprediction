@@ -18,7 +18,7 @@ def random_forest(dataset: pd.DataFrame):
 
     y_pred = rf_clf.predict(X_test)
 
-    # evaluate performance
+    #evaluate performance
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
